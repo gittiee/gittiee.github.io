@@ -5,7 +5,9 @@
 	<title>PDKnight's EDM hour</title>
 	<link rel="shortcut icon" type="image/png" href="http://worldartsme.com/images/headphones-transparent-gif-clipart-1.jpg"/>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css">
 	<style>
 	@import url(https://fonts.googleapis.com/css?family=Roboto:300,700);
 	body {
@@ -153,7 +155,7 @@
 		background-color: white;
 		color: #333;
 		font-family: 'Roboto', sans-serif;
-		z-index: 1000000;
+		z-index: 2000;
 		font-size: 25px;
 	}
 	.wat-window h1 {
@@ -229,6 +231,23 @@
 		bottom: 5px;
 		right: 5px;
 	}
+	#progress {
+	  position: fixed;
+	  z-index: 2147483647;
+	  top: 0;
+	  left: 0px;
+	  width: 0%;
+	  height: 3px;
+	  background: #97FC00;
+	  -moz-border-radius: 1px;
+	  -webkit-border-radius: 1px;
+	  border-radius: 1px;
+	  -moz-transition: width 500ms ease-out, opacity 400ms linear;
+	  -ms-transition: width 500ms ease-out, opacity 400ms linear;
+	  -o-transition: width 500ms ease-out, opacity 400ms linear;
+	  -webkit-transition: width 500ms ease-out, opacity 400ms linear;
+	  transition: width 500ms ease-out, opacity 400ms linear;
+	}
 	</style>
 </head>
 <body>
@@ -239,7 +258,10 @@
 		<div class="volume"><i class="fa fa-volume-up" style="position: relative; bottom: 3px;"></i><input type="range" id="volume" max="100" value="100"></div>
 		<div class="ap"><button id="false" style="background-color: #333; color: #fff;"><i class="fa fa-times"></i> autoplay</button><button id="true" style="display: none; background-color: #11A9E2; color: white;"><i class="fa fa-check"></i> autoplay</button></div>
 		<br>
-		<button id="prev"><i class="fa fa-angle-left"></i></button><button id="play"><i class="fa fa-play"></i> PLAY</button><button id="stop" style="display: none;"><i class="fa fa-pause"></i> STOP</button><button id="next"><i class="fa fa-angle-right"></i></button>
+		<button id="prev"><i class="fa fa-angle-left"></i></button>
+		<button id="play"><i class="fa fa-play"></i> PLAY</button>
+		<button id="stop" style="display: none;"><i class="fa fa-pause"></i> STOP</button>
+		<button id="next"><i class="fa fa-angle-right"></i></button>
 		<div id="time"></div>
 	</div>
 	<div class="list">
@@ -267,7 +289,7 @@
 		<div class="item" id="candyland">Tobu - Candyland</div>
 		<div class="item" id="ghosts">Mako - Ghosts</div>
 		<div class="item" id="hellcat">Desmeon - Hellcat</div>
-		<div class="item" id="oneday">Desmeon - On That Day</div>
+		<div class="item" id="onday">Desmeon - On That Day</div>
 		<div class="item" id="loveu">Razihel - Love U</div>
 		<div class="item" id="breathe">Glude - Breathe</div>
 		<div class="item" id="direction">Anikdote - Which Direction?</div>
@@ -283,6 +305,14 @@
 		<div class="pdk"><div class="hps"></div></div>
 	</div>
 	<script>
+	(function($) {
+    $.fn.goTo = function() {
+        $('html, body').animate({
+            scrollTop: $(this).offset().top + 'px'
+        }, 'fast');
+        return this; // for chaining...
+    }
+	})(jQuery);
 	var audios = {
 		fade: new Audio('music/fade.mp3'),
 		spectre: new Audio('music/spectre.mp3'),
@@ -308,7 +338,7 @@
 		candyland: new Audio('music/candyland.mp3'),
 		ghosts: new Audio('music/ghosts.mp3'),
 		hellcat: new Audio('music/hellcat.mp3'),
-		oneday: new Audio('music/oneday.mp3'),
+		onday: new Audio('music/onday.mp3'),
 		loveu: new Audio('music/loveu.mp3'),
 		breathe: new Audio('music/breathe.mp3'),
 		direction: new Audio('music/direction.mp3'),
@@ -336,7 +366,9 @@
 	})
 	$(document).on('input', '#volume', function(){
 		var vol = $('#volume').val() / 100;
-		audios[cs].volume = vol;
+		for (var prop in audios) {
+			audios[prop].volume = vol;
+		}
 	})
 	function stop(name) {
 		$('.item').removeClass('active');
@@ -406,6 +438,7 @@
 						cs = $('.item:first').get(0).id;
 						$('.active').removeClass('active');
 						$('.item:first').addClass('active');
+						$('.list').scrollTop = $('.list').scrollHeight;
 						$('.st').html($('.active').html());
 						audios[cs].play();
 						$('#bar').attr('max', audios[cs].duration);
@@ -416,6 +449,7 @@
 						cs = $('.active').next().get(0).id;
 						$('.active').next().addClass('active');
 						$('.active:first').removeClass('active');
+						$('.list').scrollTop = $('.list').scrollHeight;
 						$('.st').html($('.active').html());
 						audios[cs].play();
 						$('#bar').attr('max', audios[cs].duration);
@@ -426,14 +460,15 @@
 					$('#stop').click();
 				}
 				clearInterval(ttime);
+				$('#play').click();
 			}
 		},1000);
 	}
 	$('.wat').click(function(){
-		$('.wat-window').fadeIn(200);
+		$('.wat-window').slideDown();
 	})
 	$('.wat-window .x').click(function(){
-		$('.wat-window').fadeOut(200);
+		$('.wat-window').slideUp();
 	})
 	$('#prev').click(function(){
 		stopsongs();
