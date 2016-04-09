@@ -286,14 +286,6 @@
 		<div class="pdk"><div class="hps"></div></div>
 	</div>
 	<script>
-	(function($) {
-    $.fn.goTo = function() {
-        $('html, body').animate({
-            scrollTop: $(this).offset().top + 'px'
-        }, 'fast');
-        return this; // for chaining...
-    }
-	})(jQuery);
 	var audios = {
 		fade: new Audio('music/fade.mp3'),
 		spectre: new Audio('music/spectre.mp3'),
