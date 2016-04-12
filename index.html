@@ -317,6 +317,19 @@
 		direction: new Audio('music/direction.mp3'),
 		night: new Audio('music/night.mp3')
 	};
+	$('#play').click(function(){
+		audios[cs].play();
+		$(this).fadeOut(0);
+		$('#stop').fadeIn(0);
+		$('#bar').attr('max', audios[cs].duration);
+		sint();
+	})
+	$('#stop').click(function(){
+		audios[cs].pause();
+		$(this).fadeOut(0);
+		$('#play').fadeIn(0);
+		clearInterval(ttime);
+	})
 	$(document).on('input', '#bar', function(){
 		audios[cs].currentTime = $(this).val();
 		setInterval(function(){
@@ -448,19 +461,6 @@
 		$('.st').html($('.active').html());
 		$('#play').click();
 		audios[cs].load();
-	})
-	$('#play').click(function(){
-		audios[cs].play();
-		$(this).fadeOut(0);
-		$('#stop').fadeIn(0);
-		$('#bar').attr('max', audios[cs].duration);
-		sint();
-	})
-	$('#stop').click(function(){
-		audios[cs].pause();
-		$(this).fadeOut(0);
-		$('#play').fadeIn(0);
-		clearInterval(ttime);
 	})
 	</script>
 </body>
