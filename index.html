@@ -318,7 +318,6 @@
 		night: new Audio('music/night.mp3')
 	};
 	$('#play').click(function(){
-		audios[cs].load();
 		audios[cs].play();
 		$(this).fadeOut(0);
 		$('#stop').fadeIn(0);
